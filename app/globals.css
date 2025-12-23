@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- COLOR PALETTE --- */
+  /* Backgrounds */
+  --bg-primary: #0A0A0A;    /* Deepest Black (Main Page Background) */
+  --bg-secondary: #141414;  /* Slightly lighter (Card Backgrounds) */
+  --bg-tertiary: #1F1F1F;   /* Hover states / Borders */
+  
+  /* Accents */
+  --accent-gold: #C6A87C;   /* The Bronze/Gold used for buttons & icons */
+  --accent-hover: #B09265;  /* Darker Gold for hover states */
+  --accent-light: #E0C8A0;  /* Lighter Gold for subtle highlights */
+  
+  /* Typography Colors */
+  --text-primary: #FFFFFF;  /* Main Headings */
+  --text-secondary: #B3B3B3; /* Body Text / Subtitles */
+  --text-muted: #666666;    /* Footers / Meta data */
+  --text-inverse: #000000;  /* Text on Gold buttons */
+
+  /* --- SPACING & LAYOUT --- */
+  --container-width: 1200px;
+  --spacing-section: 120px;       
+  --spacing-card: 24px;
+  
+  /* --- BORDERS & RADIUS --- */
+  --radius-sm: 4px;               /* Buttons */
+  --radius-md: 12px;              /* Cards */
+  --radius-lg: 24px;              /* Large Feature Images */
+  --border-subtle: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-light: var(--accent-light);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
+  
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  antialiased: true;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
 }

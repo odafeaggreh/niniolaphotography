@@ -1,0 +1,85 @@
+"use client";
+
+import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Reveal } from "./ui/Animations";
+
+// Placeholder images - using simple colors/gradients for now if real images aren't available
+// In a real scenario, we'd use real URLs.
+const projects = [
+  { id: 1, title: "Nature's Silence", category: "Landscape", height: "h-96", color: "bg-neutral-800" },
+  { id: 2, title: "Urban Echoes", category: "Street", height: "h-64", color: "bg-neutral-700" },
+  { id: 3, title: "Golden Hour", category: "Portrait", height: "h-80", color: "bg-neutral-600" },
+  { id: 4, title: "Silent Deep", category: "Underwater", height: "h-72", color: "bg-neutral-800" },
+  { id: 5, title: "Mountain Peak", category: "Adventure", height: "h-64", color: "bg-neutral-700" },
+  { id: 6, title: "City Lights", category: "Night", height: "h-80", color: "bg-neutral-900" },
+];
+
+export default function PortfolioGrid() {
+  return (
+    <section id="works" className="py-[120px] bg-bg-primary px-6">
+      <div className="max-w-[1200px] mx-auto">
+        <Reveal>
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+            <div>
+                <p className="text-accent-gold uppercase tracking-[0.2em] text-sm mb-2">
+                Portfolio
+                </p>
+                <h2 className="text-3xl md:text-5xl text-white font-serif">
+                Our Featured Portfolio Projects
+                </h2>
+            </div>
+            <motion.button 
+                whileHover={{ x: 5 }}
+                whileTap={{ scale: 0.95 }}
+                className="hidden md:flex items-center gap-2 text-white hover:text-accent-gold transition-colors pb-2 border-b border-transparent hover:border-accent-gold"
+            >
+                View All Works <ArrowUpRight size={18} />
+            </motion.button>
+            </div>
+        </Reveal>
+
+        {/* Masonry-ish Grid */}
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+          {projects.map((project, i) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              className={`relative group overflow-hidden rounded-md break-inside-avoid ${project.height} ${project.color}`}
+            >
+              {/* Image Placeholder - Replace with Next/Image when real images exist */}
+               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10" />
+               
+               {/* Just a colored block for now to simulate image */}
+               <motion.div 
+                    className="w-full h-full bg-cover bg-center" 
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.7 }}
+                    style={{backgroundImage: `url('https://placehold.co/600x800/1a1a1a/FFF?text=${project.category}')`}}
+                ></motion.div>
+
+
+              {/* Overlay Content */}
+              <div className="absolute bottom-0 left-0 w-full p-6 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                <p className="text-accent-gold text-xs uppercase tracking-widest mb-1 opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                  {project.category}
+                </p>
+                <h3 className="text-white text-xl font-serif">{project.title}</h3>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        
+        <div className="mt-12 flex justify-center md:hidden">
+            <button className="flex items-center gap-2 text-white hover:text-accent-gold transition-colors pb-1 border-b border-white hover:border-accent-gold">
+            View All Works <ArrowUpRight size={18} />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
