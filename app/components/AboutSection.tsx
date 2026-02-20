@@ -7,8 +7,8 @@ import { Reveal } from "./ui/Animations";
 
 export default function AboutSection() {
   return (
-    <section id="about-me" className="py-[120px] bg-bg-primary px-6">
-      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center">
+    <section id="about-me" className="py-30 bg-bg-primary px-6">
+      <div className="max-w-300 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center">
         {/* Left Side: Images */}
         {/* Left Side: Images */}
         <div className="relative w-full hidden md:grid grid-cols-2 gap-4 h-full items-center">
@@ -46,7 +46,7 @@ export default function AboutSection() {
         </div>
 
         {/* Mobile Image (Simple Stack) */}
-        <div className="block md:hidden relative h-[400px] w-full rounded-2xl overflow-hidden mb-8">
+        <div className="block md:hidden relative h-100 w-full rounded-2xl overflow-hidden mb-8">
              <Image 
                 src="/hero2.jpg" 
                 alt="Photographer Portrait" 
@@ -93,14 +93,6 @@ export default function AboutSection() {
                 </motion.div>
             ))}
           </div>
-
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-transparent border border-white text-white px-8 py-3 rounded-sm font-bold tracking-wide hover:bg-white hover:text-black transition-colors w-max"
-          >
-            More About Us
-          </motion.button>
         </div>
       </div>
     </section>

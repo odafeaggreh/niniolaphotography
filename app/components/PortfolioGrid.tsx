@@ -4,21 +4,11 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Reveal } from "./ui/Animations";
-
-// Placeholder images - using simple colors/gradients for now if real images aren't available
-// In a real scenario, we'd use real URLs.
-const projects = [
-  { id: 1, title: "Nature's Silence", category: "Landscape", height: "h-96", color: "bg-neutral-800" },
-  { id: 2, title: "Urban Echoes", category: "Street", height: "h-64", color: "bg-neutral-700" },
-  { id: 3, title: "Golden Hour", category: "Portrait", height: "h-80", color: "bg-neutral-600" },
-  { id: 4, title: "Silent Deep", category: "Underwater", height: "h-72", color: "bg-neutral-800" },
-  { id: 5, title: "Mountain Peak", category: "Adventure", height: "h-64", color: "bg-neutral-700" },
-  { id: 6, title: "City Lights", category: "Night", height: "h-80", color: "bg-neutral-900" },
-];
+import { projects } from "@/app/constants/projects";
 
 export default function PortfolioGrid() {
   return (
-    <section id="works" className="py-[120px] bg-bg-primary px-6">
+    <section id="works" className="py-30 bg-bg-primary px-6">
       <div className="max-w-[1200px] mx-auto">
         <Reveal>
             <div className="flex flex-col md:flex-row justify-between items-end mb-16">
@@ -49,17 +39,15 @@ export default function PortfolioGrid() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              className={`relative group overflow-hidden rounded-md break-inside-avoid ${project.height} ${project.color}`}
+              className={`relative group overflow-hidden rounded-md break-inside-avoid ${project.height}`}
             >
-              {/* Image Placeholder - Replace with Next/Image when real images exist */}
-               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10" />
                
-               {/* Just a colored block for now to simulate image */}
                <motion.div 
                     className="w-full h-full bg-cover bg-center" 
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.7 }}
-                    style={{backgroundImage: `url('https://placehold.co/600x800/1a1a1a/FFF?text=${project.category}')`}}
+                    style={{backgroundImage: `url('${project.image}')`}}
                 ></motion.div>
 
 

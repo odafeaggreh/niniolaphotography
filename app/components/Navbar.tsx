@@ -40,11 +40,11 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
-          {["Home", "About Me", "Works", "Rates", "Frame Shop"].map((item) => (
+          {["Home", "About Me", "Portfolio", "Frame Shop", "Get in touch"].map((item) => (
             <Link
               key={item}
               href={`#${item.toLowerCase().replace(" ", "-")}`}
-              className="text-sm uppercase tracking-widest text-white hover:text-accent-gold transition-colors"
+              className="text-xs uppercase tracking-widest text-white hover:text-accent-gold transition-colors"
             >
               {item}
             </Link>
@@ -78,11 +78,11 @@ export default function Navbar() {
                 className="absolute top-full left-0 w-full bg-bg-secondary border-t border-white/10 overflow-hidden md:hidden"
             >
                 <div className="p-6 flex flex-col gap-4">
-                {["Home", "Works", "Rates", "Frame Shop", "About Me"].map((item) => (
+                {["Home", "About Me", "Portfolio", "Frame Shop", "Get in touch"].map((item) => (
                     <Link
                     key={item}
                     href={`#${item.toLowerCase().replace(" ", "-")}`}
-                    className="text-white uppercase tracking-widest text-sm hover:text-accent-gold"
+                    className="text-white uppercase tracking-widest text-xs hover:text-accent-gold"
                     onClick={() => setIsOpen(false)}
                     >
                     {item}

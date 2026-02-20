@@ -3,33 +3,7 @@
 import { Camera, Image as ImageIcon, Video, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { Reveal } from "./ui/Animations";
-
-const services = [
-  {
-    icon: Camera,
-    title: "Portrait Session",
-    description: "Personalized photo shoots that capture your unique personality and style.",
-    price: "From $200",
-  },
-  {
-    icon: ImageIcon,
-    title: "Event Coverage",
-    description: "Professional coverage for weddings, corporate events, and parties.",
-    price: "From $800",
-  },
-  {
-    icon: Video,
-    title: "Commercial",
-    description: "High-quality imagery for brands, products, and marketing campaigns.",
-    price: "Custom Quote",
-  },
-  {
-    icon: User,
-    title: "Headshots",
-    description: "Professional headshots for actors, models, and corporate profiles.",
-    price: "From $150",
-  },
-];
+import { services } from "@/app/constants/services";
 
 export default function ServiceCards() {
   return (
@@ -67,7 +41,6 @@ export default function ServiceCards() {
               <p className="text-text-secondary text-sm leading-relaxed mb-6">
                 {service.description}
               </p>
-              <p className="text-accent-gold font-medium text-sm">{service.price}</p>
             </motion.div>
           ))}
         </div>
