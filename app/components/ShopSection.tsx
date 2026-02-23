@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { ShoppingBag, XIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { Reveal } from "./ui/Animations";
-import { SHOP_CONTENT, products } from "@/app/constants/shop";
+import { SHOP_CONTENT } from "@/app/constants/shop";
 import { Product } from "@/app/types";
 import {
   Dialog,
@@ -15,29 +15,32 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-function ShopSectionContent() {
+interface Props {
+  products: Product[];
+}
+
+function ShopSectionContent({ products }: Props) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const productId = searchParams.get("product");
     if (productId) {
-      const product = products.find(p => p.id === parseInt(productId));
+      const product = products.find((p) => p.id === productId);
       if (product) {
         setSelectedProduct(product);
-        // Scroll to shop section after a small delay to ensure rendering
         setTimeout(() => {
           document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
         }, 100);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, products]);
 
   const handleOpenProduct = (product: Product) => {
     setSelectedProduct(product);
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
-      url.searchParams.set("product", product.id.toString());
+      url.searchParams.set("product", product.id);
       window.history.pushState({}, "", url.toString());
     }
   };
@@ -53,9 +56,9 @@ function ShopSectionContent() {
 
   const handleInquiry = (product: Product) => {
     if (typeof window === "undefined") return;
-    
+
     const url = new URL(window.location.origin + window.location.pathname);
-    url.searchParams.set("product", product.id.toString());
+    url.searchParams.set("product", product.id);
     url.hash = "shop";
     const directLink = url.toString();
 
@@ -73,48 +76,48 @@ function ShopSectionContent() {
 
   return (
     <>
-      <div className="max-w-[1200px] mx-auto">
+      <div className="max-w-300 mx-auto">
         <Reveal>
-            <div className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="text-accent-gold uppercase tracking-[0.2em] text-sm mb-2">
-                {SHOP_CONTENT.badge}
+              {SHOP_CONTENT.badge}
             </p>
             <h2 className="text-3xl md:text-5xl text-white font-serif mb-4">
-                {SHOP_CONTENT.title}
+              {SHOP_CONTENT.title}
             </h2>
             <p className="text-text-secondary max-w-xl mx-auto">
-                {SHOP_CONTENT.description}
+              {SHOP_CONTENT.description}
             </p>
-            </div>
+          </div>
         </Reveal>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product, i) => (
-            <motion.div 
-                key={product.id} 
-                className="group cursor-pointer"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                onClick={() => handleOpenProduct(product)}
+            <motion.div
+              key={product.id}
+              className="group cursor-pointer"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              onClick={() => handleOpenProduct(product)}
             >
-              <div className="relative overflow-hidden rounded-md mb-4 aspect-[4/5] bg-bg-tertiary">
-                <motion.div 
-                    className="w-full h-full bg-cover bg-center"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.5 }}
-                    style={{ backgroundImage: `url('${product.image}')` }}
-                ></motion.div>
+              <div className="relative overflow-hidden rounded-md mb-4 aspect-4/5 bg-bg-tertiary">
+                <motion.div
+                  className="w-full h-full bg-cover bg-center"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.5 }}
+                  style={{ backgroundImage: `url('${product.imageUrl}')` }}
+                />
               </div>
               <div className="flex justify-between items-start mb-4">
                 <div>
-                    <h3 className="text-white font-medium text-lg mb-1">{product.title}</h3>
-                    <p className="text-text-muted text-sm">{product.details || "Premium Art Framed"}</p>
+                  <h3 className="text-white font-medium text-lg mb-1">{product.title}</h3>
+                  <p className="text-text-muted text-sm">{product.details || "Premium Art Framed"}</p>
                 </div>
                 <span className="text-accent-gold font-bold">{product.price}</span>
               </div>
-              <motion.button 
+              <motion.button
                 whileTap={{ scale: 0.98 }}
                 className="w-full bg-white/5 text-white py-3 rounded-xl font-medium text-sm hover:bg-accent-gold hover:text-black transition-all border border-white/10 backdrop-blur-sm"
               >
@@ -126,34 +129,34 @@ function ShopSectionContent() {
       </div>
 
       {/* Product Information Dialog */}
-      <Dialog 
-        open={!!selectedProduct} 
+      <Dialog
+        open={!!selectedProduct}
         onOpenChange={(open) => !open && handleCloseProduct()}
       >
-        <DialogContent 
+        <DialogContent
           showCloseButton={false}
-          className="sm:max-w-5xl !max-w-5xl w-[95vw] h-[90vh] md:h-[min(800px,85vh)] bg-bg-primary border-white/10 p-0 overflow-hidden outline-none shadow-[0_0_80px_-20px_rgba(0,0,0,0.8)] rounded-2xl md:rounded-3xl border gap-0"
+          className="sm:max-w-5xl max-w-5xl! w-[95vw] h-[90vh] md:h-[min(800px,85vh)] bg-bg-primary border-white/10 p-0 overflow-hidden outline-none shadow-[0_0_80px_-20px_rgba(0,0,0,0.8)] rounded-2xl md:rounded-3xl border gap-0"
         >
           {selectedProduct && (
             <div className="relative flex flex-col md:flex-row w-full h-full overflow-hidden">
-              {/* Close Button - Pinned to Modal Root for Correct Mobile Placement */}
+              {/* Close Button */}
               <DialogClose className="absolute top-4 right-4 z-50 text-white/60 hover:text-white transition-all p-2.5 bg-black/40 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none rounded-full border border-white/10 md:border-0 hover:bg-white/10 group">
                 <XIcon size={20} className="transition-transform group-hover:rotate-90" />
                 <span className="sr-only">Close</span>
               </DialogClose>
 
               {/* Left Side: Main Image Hero */}
-              <div className="w-full md:w-1/2 lg:w-3/5 bg-bg-tertiary relative group overflow-hidden shrink-0 aspect-[4/3] md:aspect-auto border-b md:border-b-0 md:border-r border-white/5">
-                <motion.img 
+              <div className="w-full md:w-1/2 lg:w-3/5 bg-bg-tertiary relative group overflow-hidden shrink-0 aspect-4/3 md:aspect-auto border-b md:border-b-0 md:border-r border-white/5">
+                <motion.img
                   initial={{ scale: 1.05, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 1.2, ease: "easeOut" }}
-                  src={selectedProduct.image} 
-                  alt={selectedProduct.title} 
+                  src={selectedProduct.imageUrl}
+                  alt={selectedProduct.title}
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 md:opacity-0 md:group-hover:opacity-60 transition-opacity duration-700" />
-                
+
                 {/* Mobile Floating Category */}
                 {(selectedProduct.category || selectedProduct.edition) && (
                   <div className="absolute bottom-6 left-6 md:hidden z-10 flex items-center gap-3">
@@ -185,16 +188,18 @@ function ShopSectionContent() {
                         </span>
                         <div className="flex-1 h-px bg-white/5" />
                       </div>
-                      
+
                       <DialogHeader className="p-0 border-none items-start text-left">
                         <DialogTitle className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl text-white font-serif leading-[1.1] tracking-tight">
-                            {selectedProduct.title}
+                          {selectedProduct.title}
                         </DialogTitle>
                       </DialogHeader>
 
                       <div className="pt-2">
                         <p className="text-2xl text-white font-light tracking-tight">{selectedProduct.price}</p>
-                        <p className="text-text-muted text-[8px] uppercase tracking-[0.3em] font-medium mt-1">{SHOP_CONTENT.dialog.shippingInfo}</p>
+                        <p className="text-text-muted text-[8px] uppercase tracking-[0.3em] font-medium mt-1">
+                          {SHOP_CONTENT.dialog.shippingInfo}
+                        </p>
                       </div>
                     </div>
 
@@ -223,13 +228,13 @@ function ShopSectionContent() {
                         </h4>
                         <div className="grid grid-cols-3 gap-3">
                           {selectedProduct.images.map((img, idx) => (
-                            <div 
-                              key={idx} 
+                            <div
+                              key={idx}
                               className="aspect-square rounded-xl overflow-hidden bg-bg-tertiary border border-white/10 cursor-zoom-in group/img"
                             >
-                              <img 
-                                src={img} 
-                                alt="Detail" 
+                              <img
+                                src={img}
+                                alt="Detail"
                                 className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
                               />
                             </div>
@@ -242,7 +247,7 @@ function ShopSectionContent() {
 
                 {/* Streamlined Action Bar */}
                 <div className="px-6 py-6 md:px-10 md:py-8 bg-bg-secondary/30 backdrop-blur-2xl border-t border-white/10 shrink-0">
-                  <motion.button 
+                  <motion.button
                     onClick={() => selectedProduct && handleInquiry(selectedProduct)}
                     whileHover={{ scale: 1.01, backgroundColor: "#E0C8A0" }}
                     whileTap={{ scale: 0.99 }}
@@ -251,7 +256,9 @@ function ShopSectionContent() {
                     <ShoppingBag size={14} strokeWidth={3} />
                     {SHOP_CONTENT.dialog.actionButton}
                     <span className="opacity-40">/</span>
-                    <span className="font-serif italic lowercase tracking-normal text-xs font-normal">{SHOP_CONTENT.dialog.actionButtonSub}</span>
+                    <span className="font-serif italic lowercase tracking-normal text-xs font-normal">
+                      {SHOP_CONTENT.dialog.actionButtonSub}
+                    </span>
                   </motion.button>
                 </div>
               </div>
@@ -263,15 +270,17 @@ function ShopSectionContent() {
   );
 }
 
-export default function ShopSection() {
+export default function ShopSection({ products }: Props) {
   return (
     <section id="shop" className="py-30 bg-bg-secondary px-6">
-      <Suspense fallback={
-        <div className="max-w-[1200px] mx-auto text-center py-20">
-          <p className="text-text-muted animate-pulse">Loading collection...</p>
-        </div>
-      }>
-        <ShopSectionContent />
+      <Suspense
+        fallback={
+          <div className="max-w-300 mx-auto text-center py-20">
+            <p className="text-text-muted animate-pulse">Loading collection...</p>
+          </div>
+        }
+      >
+        <ShopSectionContent products={products} />
       </Suspense>
     </section>
   );

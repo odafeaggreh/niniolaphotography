@@ -40,7 +40,7 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
-          {["Home", "About Me", "Portfolio", "Frame Shop", "Get in touch"].map((item) => (
+          {["Home", "About Me", "Portfolio", "Get in touch"].map((item) => (
             <Link
               key={item}
               href={`#${item.toLowerCase().replace(" ", "-")}`}
@@ -78,7 +78,7 @@ export default function Navbar() {
                 className="absolute top-full left-0 w-full bg-bg-secondary border-t border-white/10 overflow-hidden md:hidden"
             >
                 <div className="p-6 flex flex-col gap-4">
-                {["Home", "About Me", "Portfolio", "Frame Shop", "Get in touch"].map((item) => (
+                {["Home", "About Me", "Portfolio", "Get in touch"].map((item) => (
                     <Link
                     key={item}
                     href={`#${item.toLowerCase().replace(" ", "-")}`}

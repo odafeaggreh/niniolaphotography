@@ -1,42 +1,52 @@
-import { LucideIcon } from "lucide-react";
+// ---------------------------------------------------------------------------
+// DB types — match Firestore document shapes exactly (string IDs, Cloudinary)
+// ---------------------------------------------------------------------------
 
-export interface Service {
-  icon: LucideIcon;
+/** Raw service data from Firestore. Icon is a string name, mapped client-side. */
+export interface ServiceData {
+  id: string;
+  iconName: string;
   title: string;
   description: string;
   price: string;
+  order: number;
 }
 
 export interface Project {
-  id: number;
+  id: string;
   title: string;
   category: string;
+  /** Tailwind height class, e.g. "h-96" */
   height: string;
-  image: string;
+  imageUrl: string;
+  cloudinaryPublicId: string | null;
+  order: number;
 }
 
 export interface Product {
-  id: number;
+  id: string;
+  slug: string;
   title: string;
   price: string;
-  image: string;
+  imageUrl: string;
   images: string[];
-  details?: string;
-  description?: string;
-  category?: string;
-  edition?: string;
-  series?: string;
-  specs?: {
-    label: string;
-    value: string;
-  }[];
+  cloudinaryPublicId: string | null;
+  details?: string | null;
+  description?: string | null;
+  category?: string | null;
+  edition?: string | null;
+  series?: string | null;
+  specs?: { label: string; value: string }[];
+  order: number;
 }
 
 export interface Testimonial {
-  id: number;
+  id: string;
   name: string;
   role: string;
   text: string;
   rating: number;
-  avatar?: string;
+  avatarUrl: string | null;
+  order: number;
 }
+
