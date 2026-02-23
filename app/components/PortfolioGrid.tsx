@@ -7,31 +7,45 @@ import type { Project } from "@/app/types";
 
 interface Props {
   projects: Project[];
+  title?: string;
+  subtitle?: string;
+  showHeader?: boolean;
+  showViewAll?: boolean;
 }
 
-export default function PortfolioGrid({ projects }: Props) {
+export default function PortfolioGrid({ 
+  projects, 
+  title = "Our Featured Portfolio Projects",
+  subtitle = "Portfolio",
+  showHeader = true,
+  showViewAll = true
+}: Props) {
   return (
-    <section id="works" className="py-30 bg-bg-primary px-6">
-      <div className="max-w-[1200px] mx-auto">
-        <Reveal>
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16">
-            <div>
-              <p className="text-accent-gold uppercase tracking-[0.2em] text-sm mb-2">
-                Portfolio
-              </p>
-              <h2 className="text-3xl md:text-5xl text-white font-serif">
-                Our Featured Portfolio Projects
-              </h2>
+    <section id="works" className="py-20 bg-bg-primary px-6">
+      <div className="max-w-300 mx-auto">
+        {showHeader && (
+          <Reveal>
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+              <div>
+                <p className="text-accent-gold uppercase tracking-[0.2em] text-sm mb-2">
+                  {subtitle}
+                </p>
+                <h2 className="text-3xl md:text-5xl text-white font-serif">
+                  {title}
+                </h2>
+              </div>
+              {showViewAll && (
+                <motion.button
+                  whileHover={{ x: 5 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="hidden md:flex items-center gap-2 text-white hover:text-accent-gold transition-colors pb-2 border-b border-transparent hover:border-accent-gold"
+                >
+                  View All Works <ArrowUpRight size={18} />
+                </motion.button>
+              )}
             </div>
-            <motion.button
-              whileHover={{ x: 5 }}
-              whileTap={{ scale: 0.95 }}
-              className="hidden md:flex items-center gap-2 text-white hover:text-accent-gold transition-colors pb-2 border-b border-transparent hover:border-accent-gold"
-            >
-              View All Works <ArrowUpRight size={18} />
-            </motion.button>
-          </div>
-        </Reveal>
+          </Reveal>
+        )}
 
         {/* Masonry-ish Grid */}
         <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
@@ -64,11 +78,13 @@ export default function PortfolioGrid({ projects }: Props) {
           ))}
         </div>
 
-        <div className="mt-12 flex justify-center md:hidden">
-          <button className="flex items-center gap-2 text-white hover:text-accent-gold transition-colors pb-1 border-b border-white hover:border-accent-gold">
-            View All Works <ArrowUpRight size={18} />
-          </button>
-        </div>
+        {showHeader && showViewAll && (
+          <div className="mt-12 flex justify-center md:hidden">
+            <button className="flex items-center gap-2 text-white hover:text-accent-gold transition-colors pb-1 border-b border-white hover:border-accent-gold">
+              View All Works <ArrowUpRight size={18} />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

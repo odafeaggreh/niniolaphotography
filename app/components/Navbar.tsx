@@ -6,6 +6,13 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const navItems = [
+  { name: "Home", path: "/" },
+  { name: "About Me", path: "#about" },
+  { name: "Portfolio", path: "/portfolio" },
+  { name: "Get in touch", path: "/contact" },
+];
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -26,7 +33,7 @@ export default function Navbar() {
           : "bg-transparent py-6"
       }`}
     >
-      <div className="max-w-[1200px] mx-auto px-6 flex justify-between items-center">
+      <div className="max-w-300 mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="relative w-40 h-12">
           <Image 
@@ -40,13 +47,13 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
-          {["Home", "About Me", "Portfolio", "Get in touch"].map((item) => (
+          {navItems.map((item) => (
             <Link
-              key={item}
-              href={`#${item.toLowerCase().replace(" ", "-")}`}
+              key={item.name}
+              href={item.path}
               className="text-xs uppercase tracking-widest text-white hover:text-accent-gold transition-colors"
             >
-              {item}
+              {item.name}
             </Link>
           ))}
           <motion.button 
@@ -78,14 +85,14 @@ export default function Navbar() {
                 className="absolute top-full left-0 w-full bg-bg-secondary border-t border-white/10 overflow-hidden md:hidden"
             >
                 <div className="p-6 flex flex-col gap-4">
-                {["Home", "About Me", "Portfolio", "Get in touch"].map((item) => (
+                {navItems.map((item) => (
                     <Link
-                    key={item}
-                    href={`#${item.toLowerCase().replace(" ", "-")}`}
+                    key={item.name}
+                    href={item.path}
                     className="text-white uppercase tracking-widest text-xs hover:text-accent-gold"
                     onClick={() => setIsOpen(false)}
                     >
-                    {item}
+                    {item.name}
                     </Link>
                 ))}
                 <motion.button 
