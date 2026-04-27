@@ -27,13 +27,24 @@ export async function getProjects(options?: {
 
   return snapshot.docs.map((doc) => {
     const data = doc.data();
+    let images = data.images ?? [];
+    
+    // Legacy support: if images is empty but imageUrl exists, convert it
+    if (images.length === 0 && data.imageUrl) {
+      images = [{
+        url: data.imageUrl,
+        isPrimary: true,
+        cloudinaryPublicId: data.cloudinaryPublicId || `legacy-${doc.id}`,
+      }];
+    }
+
     return {
       id: doc.id,
       title: data.title ?? "",
       category: data.category ?? "",
       height: data.height ?? "h-64",
-      imageUrl: data.imageUrl ?? "",
-      cloudinaryPublicId: data.cloudinaryPublicId ?? null,
+      images: images,
+      description: data.description ?? "",
       order: data.order ?? 0,
     } satisfies Project;
   });
@@ -60,4 +71,37 @@ export async function getAllCategories(): Promise<string[]> {
     if (cat) categories.add(cat);
   });
   return Array.from(categories).sort();
+}
+export async function addProject(project: Omit<Project, "id">): Promise<string> {
+  const db = getAdminDb();
+  const docRef = await db.collection("projects").add(project);
+  return docRef.id;
+}
+
+export async function updateProject(id: string, project: Partial<Project>): Promise<void> {
+  const db = getAdminDb();
+  await db.collection("projects").doc(id).update(project);
+}
+
+export async function deleteProject(id: string): Promise<void> {
+  const db = getAdminDb();
+  await db.collection("projects").doc(id).delete();
+}
+
+export async function getProjectById(id: string): Promise<Project | null> {
+  const db = getAdminDb();
+  const doc = await db.collection("projects").doc(id).get();
+  
+  if (!doc.exists) return null;
+  
+  const data = doc.data()!;
+  return {
+    id: doc.id,
+    title: data.title ?? "",
+    category: data.category ?? "",
+    height: data.height ?? "h-64",
+    images: data.images ?? [],
+    description: data.description ?? "",
+    order: data.order ?? 0,
+  } satisfies Project;
 }

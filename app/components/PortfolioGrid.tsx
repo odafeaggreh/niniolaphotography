@@ -50,33 +50,39 @@ export default function PortfolioGrid({
 
         {/* Masonry-ish Grid */}
         <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className={`relative group overflow-hidden rounded-md break-inside-avoid ${project.height}`}
-            >
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10" />
-
+          {projects.map((project, i) => {
+            const primaryImage = project.images?.find(img => img.isPrimary) || project.images?.[0];
+            
+            return (
               <motion.div
-                className="w-full h-full bg-cover bg-center"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.7 }}
-                style={{ backgroundImage: `url('${project.imageUrl}')` }}
-              />
+                key={project.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className={`relative group overflow-hidden rounded-md break-inside-avoid ${project.height}`}
+              >
+                <Link href={`/portfolio/${project.id}`} className="block h-full w-full">
+                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10" />
 
-              {/* Overlay Content */}
-              <div className="absolute bottom-0 left-0 w-full p-6 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                <p className="text-accent-gold text-xs uppercase tracking-widest mb-1 opacity-0 group-hover:opacity-100 transition-opacity delay-100">
-                  {project.category}
-                </p>
-                <h3 className="text-white text-xl font-serif">{project.title}</h3>
-              </div>
-            </motion.div>
-          ))}
+                  <motion.div
+                    className="w-full h-full bg-cover bg-center"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.7 }}
+                    style={{ backgroundImage: `url('${primaryImage?.url || "/placeholder-image.jpg"}')` }}
+                  />
+
+                  {/* Overlay Content */}
+                  <div className="absolute bottom-0 left-0 w-full p-6 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    <p className="text-accent-gold text-xs uppercase tracking-widest mb-1 opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                      {project.category}
+                    </p>
+                    <h3 className="text-white text-xl font-serif">{project.title}</h3>
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
 
         {showHeader && showViewAll && (

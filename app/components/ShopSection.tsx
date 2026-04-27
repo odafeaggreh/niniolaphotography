@@ -65,7 +65,7 @@ function ShopSectionContent({ products }: Props) {
     const message = SHOP_CONTENT.contact.messageTemplate
       .replaceAll("{title}", product.title)
       .replaceAll("{price}", product.price)
-      .replaceAll("{details}", product.details || "N/A")
+      .replaceAll("{details}", product.description || "N/A")
       .replaceAll("{edition}", product.edition || "N/A")
       .replaceAll("{link}", directLink);
 
@@ -107,13 +107,13 @@ function ShopSectionContent({ products }: Props) {
                   className="w-full h-full bg-cover bg-center"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.5 }}
-                  style={{ backgroundImage: `url('${product.imageUrl}')` }}
+                  style={{ backgroundImage: `url('${product.images?.find(i => i.isPrimary)?.url || product.images?.[0]?.url || ""}')` }}
                 />
               </div>
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-white font-medium text-lg mb-1">{product.title}</h3>
-                  <p className="text-text-muted text-sm">{product.details || "Premium Art Framed"}</p>
+                  <p className="text-text-muted text-sm">{product.category || "Premium Art Framed"}</p>
                 </div>
                 <span className="text-accent-gold font-bold">{product.price}</span>
               </div>
@@ -151,7 +151,7 @@ function ShopSectionContent({ products }: Props) {
                   initial={{ scale: 1.05, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 1.2, ease: "easeOut" }}
-                  src={selectedProduct.imageUrl}
+                  src={selectedProduct.images?.find(i => i.isPrimary)?.url || selectedProduct.images?.[0]?.url || ""}
                   alt={selectedProduct.title}
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
@@ -233,7 +233,7 @@ function ShopSectionContent({ products }: Props) {
                               className="aspect-square rounded-xl overflow-hidden bg-bg-tertiary border border-white/10 cursor-zoom-in group/img"
                             >
                               <img
-                                src={img}
+                                src={img.url}
                                 alt="Detail"
                                 className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
                               />

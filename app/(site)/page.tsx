@@ -1,10 +1,10 @@
-import Hero from "./components/Hero";
-import AboutSection from "./components/AboutSection";
-import ServiceCards from "./components/ServiceCards";
-import PortfolioGrid from "./components/PortfolioGrid";
-import ShopSection from "./components/ShopSection";
-import Testimonials from "./components/Testimonials";
-import BookingSection from "./components/BookingSection";
+import Hero from "../components/Hero";
+import AboutSection from "../components/AboutSection";
+import ServiceCards from "../components/ServiceCards";
+import PortfolioGrid from "../components/PortfolioGrid";
+import ShopSection from "../components/ShopSection";
+import Testimonials from "../components/Testimonials";
+import BookingSection from "../components/BookingSection";
 import { getProjects } from "@/lib/db/projects";
 import { getServices } from "@/lib/db/services";
 import { getTestimonials } from "@/lib/db/testimonials";
