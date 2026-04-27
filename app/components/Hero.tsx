@@ -10,7 +10,7 @@ export default function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/hero.png"
+          src="/hero.jpg"
           alt="Cinematic photography background"
           fill
           className="object-cover"
@@ -20,7 +20,7 @@ export default function Hero() {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             transition={{ duration: 1.5 }}
-            className="absolute inset-0 bg-black/20" 
+            className="absolute inset-0 bg-white/5" 
         />
       </div>
 
@@ -32,7 +32,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             className="font-serif text-[5vh] font-medium sm:text-[6vh] md:text-[7vh] lg:text-[8vh] text-white leading-[1.1] mb-[3vh] max-w-4xl"
         >
-          Capturing Moments, Crafting Stories. Welcome To My Photography Portfolio.
+          Capturing Moments, Crafting Stories. Welcome To NiNiola Photography.
         </motion.h1>
         
         <motion.p 

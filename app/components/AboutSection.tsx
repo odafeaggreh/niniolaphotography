@@ -21,7 +21,7 @@ export default function AboutSection() {
                 className="relative w-full aspect-3/4 rounded-2xl overflow-hidden translate-y-12"
             >
                  <Image 
-                    src="/hero2.jpg" 
+                    src="/ninola_2.jpg" 
                     alt="Photographer Portrait" 
                     fill 
                     className="object-cover"
@@ -37,7 +37,7 @@ export default function AboutSection() {
                 className="relative w-full aspect-3/4 rounded-2xl overflow-hidden -translate-y-12"
             >
                   <Image 
-                    src="/hero2.jpg" 
+                    src="/ninola_1.jpg" 
                     alt="Photographer at work" 
                     fill 
                     className="object-cover"
