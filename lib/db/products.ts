@@ -1,14 +1,30 @@
 import { getAdminDb } from "@/lib/firebase-admin";
 import type { Product } from "@/app/types";
 
-export async function getProducts(): Promise<Product[]> {
+export async function getProducts(options?: {
+  limit?: number;
+  offset?: number;
+}): Promise<Product[]> {
   const db = getAdminDb();
-  const snapshot = await db
-    .collection("products")
-    .orderBy("order", "asc")
-    .get();
+  let query: FirebaseFirestore.Query = db.collection("products").orderBy("order", "asc");
+
+  if (options?.offset) {
+    query = query.offset(options.offset);
+  }
+
+  if (options?.limit) {
+    query = query.limit(options.limit);
+  }
+
+  const snapshot = await query.get();
 
   return snapshot.docs.map((doc) => docToProduct(doc));
+}
+
+export async function getProductCount(): Promise<number> {
+  const db = getAdminDb();
+  const snapshot = await db.collection("products").count().get();
+  return snapshot.data().count;
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {

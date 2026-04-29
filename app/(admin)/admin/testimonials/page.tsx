@@ -1,9 +1,9 @@
-import { getProjects, getProjectCount } from "@/lib/db/projects";
-import { ProjectsClient } from "./ProjectsClient";
+import { getTestimonials, getTestimonialCount } from "@/lib/db/testimonials";
+import { TestimonialsClient } from "./TestimonialsClient";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminProjectsPage({
+export default async function AdminTestimonialsPage({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string }>;
@@ -13,15 +13,15 @@ export default async function AdminProjectsPage({
   const limit = 10;
   const offset = (currentPage - 1) * limit;
 
-  const [projects, totalCount] = await Promise.all([
-    getProjects({ limit, offset }),
-    getProjectCount(),
+  const [testimonials, totalCount] = await Promise.all([
+    getTestimonials({ limit, offset }),
+    getTestimonialCount(),
   ]);
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <ProjectsClient 
-        initialProjects={projects} 
+      <TestimonialsClient 
+        initialTestimonials={testimonials} 
         totalCount={totalCount}
         currentPage={currentPage}
         pageSize={limit}

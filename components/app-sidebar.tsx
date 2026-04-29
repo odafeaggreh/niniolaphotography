@@ -1,6 +1,9 @@
+"use client";
+
 import * as React from "react";
-import { Camera, Image as ImageIcon, LayoutDashboard, Settings } from "lucide-react";
+import { Camera, Image as ImageIcon, LayoutDashboard, Settings, MessageSquare } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -13,6 +16,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 const data = {
@@ -35,6 +39,11 @@ const data = {
           url: "/admin/frames",
           icon: ImageIcon,
         },
+        {
+          title: "Testimonials",
+          url: "/admin/testimonials",
+          icon: MessageSquare,
+        },
       ],
     },
     {
@@ -51,6 +60,13 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
+
+  React.useEffect(() => {
+    setOpenMobile(false);
+  }, [pathname, setOpenMobile]);
+
   return (
     <Sidebar {...props}>
       <SidebarHeader className="border-b px-6 py-4">
@@ -69,7 +85,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {item.url ? (
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton 
+                      asChild 
+                      isActive={pathname === item.url}
+                      className={pathname === item.url ? "bg-accent-gold/20! text-black! font-bold hover:bg-accent-gold/30  hover:text-black" : ""}
+                    >
                       <Link href={item.url}>
                         {item.icon && <item.icon className="h-4 w-4" />}
                         <span>{item.title}</span>
@@ -79,7 +99,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 ) : (
                   item.items?.map((subItem) => (
                     <SidebarMenuItem key={subItem.title}>
-                      <SidebarMenuButton asChild>
+                      <SidebarMenuButton 
+                        asChild 
+                        isActive={pathname === subItem.url}
+                        className={pathname === subItem.url ? "bg-accent-gold/20! text-black! font-bold hover:bg-accent-gold/30  hover:text-black" : ""}
+                      >
                         <Link href={subItem.url}>
                           {subItem.icon && <subItem.icon className="h-4 w-4" />}
                           <span>{subItem.title}</span>

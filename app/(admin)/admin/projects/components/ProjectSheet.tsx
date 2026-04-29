@@ -22,14 +22,12 @@ import { RichTextEditor } from "@/components/admin/RichTextEditor";
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
   category: z.string().min(1, "Category is required"),
-  height: z.string().min(1, "Height class is required"),
   images: z.array(z.object({
     url: z.string().url(),
     isPrimary: z.boolean(),
     cloudinaryPublicId: z.string(),
   })).min(1, "At least one image is required"),
-  description: z.string().optional(),
-  order: z.number().int(),
+  description: z.string().min(1, "Description is required"),
 });
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
@@ -58,8 +56,6 @@ export function ProjectSheet({
   } = useForm<ProjectFormValues>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      height: "h-64",
-      order: 0,
       images: [],
       description: "",
     },
@@ -70,19 +66,15 @@ export function ProjectSheet({
       reset({
         title: editingProject.title,
         category: editingProject.category,
-        height: editingProject.height,
         images: editingProject.images || [],
         description: editingProject.description || "",
-        order: editingProject.order,
       });
     } else {
       reset({ 
         title: "", 
         category: "", 
-        height: "h-64", 
         images: [], 
         description: "", 
-        order: 0 
       });
     }
   }, [editingProject, reset, isOpen]);
@@ -148,23 +140,6 @@ export function ProjectSheet({
             <FieldError errors={[errors.description]} />
           </Field>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Field>
-              <FieldLabel htmlFor="height">Height Class</FieldLabel>
-              <FieldContent>
-                <Input id="height" {...register("height")} placeholder="h-64" />
-              </FieldContent>
-              <FieldError errors={[errors.height]} />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="order">Order</FieldLabel>
-              <FieldContent>
-                <Input id="order" type="number" {...register("order", { valueAsNumber: true })} />
-              </FieldContent>
-              <FieldError errors={[errors.order]} />
-            </Field>
-          </div>
 
           <div className="pt-4 flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="bg-gray-50 text-black">

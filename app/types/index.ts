@@ -24,11 +24,8 @@ export interface Project {
   id: string;
   title: string;
   category: string;
-  /** Tailwind height class, e.g. "h-96" */
-  height: string;
   images: ProjectImage[];
   description?: string;
-  order: number;
 }
 
 export interface Product {
@@ -53,7 +50,6 @@ export interface Testimonial {
   text: string;
   rating: number;
   avatarUrl: string | null;
-  order: number;
 }
 
 export interface User {

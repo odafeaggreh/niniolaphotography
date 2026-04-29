@@ -18,12 +18,29 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface FramesClientProps {
   initialFrames: Product[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
 }
 
-export function FramesClient({ initialFrames }: FramesClientProps) {
+export function FramesClient({ 
+  initialFrames,
+  totalCount,
+  currentPage,
+  pageSize
+}: FramesClientProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [editingFrame, setEditingFrame] = React.useState<Product | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -100,17 +117,20 @@ export function FramesClient({ initialFrames }: FramesClientProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Frames (Shop Items)</h1>
           <p className="text-muted-foreground">
             Manage your photo frames and products available for sale.
           </p>
         </div>
-        <Button onClick={() => {
-          setEditingFrame(null);
-          setIsOpen(true);
-        }}>
+        <Button 
+          onClick={() => {
+            setEditingFrame(null);
+            setIsOpen(true);
+          }}
+          className="w-full sm:w-auto"
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Frame
         </Button>
@@ -121,6 +141,37 @@ export function FramesClient({ initialFrames }: FramesClientProps) {
         onEdit={handleEdit} 
         onDelete={confirmDelete} 
       />
+
+      {totalCount > pageSize && (
+        <Pagination className="mt-8">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                href={currentPage > 1 ? `?page=${currentPage - 1}` : "#"} 
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+            
+            {Array.from({ length: Math.ceil(totalCount / pageSize) }).map((_, i) => (
+              <PaginationItem key={i}>
+                <PaginationLink 
+                  href={`?page=${i + 1}`}
+                  isActive={currentPage === i + 1}
+                >
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext 
+                href={currentPage < Math.ceil(totalCount / pageSize) ? `?page=${currentPage + 1}` : "#"} 
+                className={currentPage === Math.ceil(totalCount / pageSize) ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
 
       <FrameSheet 
         isOpen={isOpen}

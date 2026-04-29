@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { ShoppingBag, XIcon } from "lucide-react";
@@ -7,6 +9,8 @@ import { motion } from "framer-motion";
 import { Reveal } from "./ui/Animations";
 import { SHOP_CONTENT } from "@/app/constants/shop";
 import { Product } from "@/app/types";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Dialog,
   DialogClose,
@@ -21,6 +25,7 @@ interface Props {
 
 function ShopSectionContent({ products }: Props) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -29,6 +34,8 @@ function ShopSectionContent({ products }: Props) {
       const product = products.find((p) => p.id === productId);
       if (product) {
         setSelectedProduct(product);
+        const primary = product.images?.find(i => i.isPrimary)?.url || product.images?.[0]?.url || "";
+        setActiveImageUrl(primary);
         setTimeout(() => {
           document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
         }, 100);
@@ -38,6 +45,8 @@ function ShopSectionContent({ products }: Props) {
 
   const handleOpenProduct = (product: Product) => {
     setSelectedProduct(product);
+    const primary = product.images?.find(i => i.isPrimary)?.url || product.images?.[0]?.url || "";
+    setActiveImageUrl(primary);
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
       url.searchParams.set("product", product.id);
@@ -150,8 +159,9 @@ function ShopSectionContent({ products }: Props) {
                 <motion.img
                   initial={{ scale: 1.05, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 1.2, ease: "easeOut" }}
-                  src={selectedProduct.images?.find(i => i.isPrimary)?.url || selectedProduct.images?.[0]?.url || ""}
+                  key={activeImageUrl}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  src={activeImageUrl || ""}
                   alt={selectedProduct.title}
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
@@ -216,9 +226,11 @@ function ShopSectionContent({ products }: Props) {
                     )}
 
                     {/* Narrative Description */}
-                    <p className="text-text-secondary leading-relaxed text-sm md:text-[15px] font-light italic opacity-85">
-                      {selectedProduct.description}
-                    </p>
+                    <div className="prose prose-sm md:prose-base prose-invert max-w-none">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {selectedProduct.description || ""}
+                      </ReactMarkdown>
+                    </div>
 
                     {/* Macro Gallery */}
                     {selectedProduct.images && selectedProduct.images.length > 0 && (
@@ -230,12 +242,21 @@ function ShopSectionContent({ products }: Props) {
                           {selectedProduct.images.map((img, idx) => (
                             <div
                               key={idx}
-                              className="aspect-square rounded-xl overflow-hidden bg-bg-tertiary border border-white/10 cursor-zoom-in group/img"
+                              onClick={() => setActiveImageUrl(img.url)}
+                              className={cn(
+                                "aspect-square rounded-xl overflow-hidden bg-bg-tertiary border cursor-pointer group/img transition-all duration-300",
+                                activeImageUrl === img.url 
+                                  ? "border-accent-gold ring-2 ring-accent-gold/20 scale-[0.98]" 
+                                  : "border-white/10 hover:border-white/30"
+                              )}
                             >
                               <img
                                 src={img.url}
                                 alt="Detail"
-                                className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                                className={cn(
+                                  "w-full h-full object-cover transition-all duration-700",
+                                  activeImageUrl === img.url ? "opacity-100" : "opacity-70 group-hover:opacity-100 group-hover:scale-110"
+                                )}
                               />
                             </div>
                           ))}

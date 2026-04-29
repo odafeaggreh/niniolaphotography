@@ -5,9 +5,23 @@ import { Briefcase, ThumbsUp, Camera } from "lucide-react";
 import { motion } from "framer-motion";
 import { Reveal } from "./ui/Animations";
 
-export default function AboutSection() {
+interface AboutSectionProps {
+  stats?: {
+    yearsOfExperience: string;
+    clientsServed: string;
+    photosTaken: string;
+  };
+}
+
+export default function AboutSection({ stats }: AboutSectionProps) {
+  const displayStats = [
+    { icon: Briefcase, count: stats?.yearsOfExperience || "16+", label: "Years Experience" },
+    { icon: ThumbsUp, count: stats?.clientsServed || "386+", label: "Happy Clients" },
+    { icon: Camera, count: stats?.photosTaken || "806+", label: "Photo Shoots" },
+  ];
+
   return (
-    <section id="about-me" className="py-30 bg-bg-primary px-6">
+    <section id="about-me" className="pt-30 bg-bg-primary px-6">
       <div className="max-w-300 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center">
         {/* Left Side: Images */}
         {/* Left Side: Images */}
@@ -48,7 +62,7 @@ export default function AboutSection() {
         {/* Mobile Image (Simple Stack) */}
         <div className="block md:hidden relative h-100 w-full rounded-2xl overflow-hidden mb-8">
              <Image 
-                src="/hero2.jpg" 
+                src="/ninola_1.jpg" 
                 alt="Photographer Portrait" 
                 fill 
                 className="object-cover"
@@ -74,11 +88,7 @@ export default function AboutSection() {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-            {[
-                { icon: Briefcase, count: "16+", label: "Years Experience" },
-                { icon: ThumbsUp, count: "386+", label: "Happy Clients" },
-                { icon: Camera, count: "806+", label: "Photo Shoots" },
-            ].map((stat, idx) => (
+            {displayStats.map((stat, idx) => (
                 <motion.div 
                     key={idx} 
                     initial={{ opacity: 0, scale: 0.9 }}

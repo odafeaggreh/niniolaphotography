@@ -22,14 +22,15 @@ import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 const frameSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  price: z.string().min(1, "Price is required"),
+  amount: z.string().min(1, "Price amount is required"),
+  currency: z.string().min(1, "Currency is required"),
   category: z.string().min(1, "Category is required"),
   images: z.array(z.object({
     url: z.string().url(),
     isPrimary: z.boolean(),
     cloudinaryPublicId: z.string(),
   })).min(1, "At least one image is required"),
-  description: z.string().optional(),
+  description: z.string().min(1, "Description is required"),
   status: z.enum(["available", "out_of_stock", "unavailable"]),
   order: z.number().int(),
 });
@@ -40,7 +41,7 @@ interface FrameSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   editingFrame: Product | null;
-  onSubmit: SubmitHandler<FrameFormValues>;
+  onSubmit: (data: any) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -70,9 +71,24 @@ export function FrameSheet({
 
   React.useEffect(() => {
     if (editingFrame) {
+      // Parse existing price: "₦ 50,000" -> currency: "₦", amount: "50,000"
+      const priceStr = editingFrame.price || "";
+      const parts = priceStr.split(" ");
+      let currency = "₦";
+      let amount = priceStr;
+
+      if (parts.length > 1) {
+        currency = parts[0];
+        amount = parts.slice(1).join(" ");
+      } else if (priceStr.match(/^[₦$€£]/)) {
+        currency = priceStr.charAt(0);
+        amount = priceStr.slice(1).trim();
+      }
+
       reset({
         title: editingFrame.title,
-        price: editingFrame.price,
+        amount: amount,
+        currency: currency,
         category: editingFrame.category || "Frames",
         images: editingFrame.images || [],
         description: editingFrame.description || "",
@@ -82,7 +98,8 @@ export function FrameSheet({
     } else {
       reset({ 
         title: "", 
-        price: "", 
+        amount: "", 
+        currency: "₦",
         category: "Frames", 
         images: [], 
         description: "", 
@@ -91,6 +108,15 @@ export function FrameSheet({
       });
     }
   }, [editingFrame, reset, isOpen]);
+
+  const handleFormSubmit = (data: FrameFormValues) => {
+    const { amount, currency, ...rest } = data;
+    const formattedData = {
+      ...rest,
+      price: `${currency} ${amount}`.trim(),
+    };
+    onSubmit(formattedData);
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -101,50 +127,74 @@ export function FrameSheet({
             Enter the details for the frame product.
           </SheetDescription>
         </SheetHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4 px-4">
-          <Field>
-            <FieldLabel>Product Images</FieldLabel>
-            <FieldContent>
-              <Controller
-                name="images"
-                control={control}
-                render={({ field }) => (
-                  <ImageManager
-                    images={field.value}
-                    onChange={field.onChange}
-                    folder="products"
-                  />
-                )}
-              />
-            </FieldContent>
-            <FieldError errors={[errors.images]} />
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="title">Title</FieldLabel>
-            <FieldContent>
-              <Input id="title" {...register("title")} placeholder="Frame Title" />
-            </FieldContent>
-            <FieldError errors={[errors.title]} />
-          </Field>
-
-          <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 py-4 px-4">
             <Field>
-              <FieldLabel htmlFor="price">Price</FieldLabel>
+              <FieldLabel>Product Images</FieldLabel>
               <FieldContent>
-                <Input id="price" {...register("price")} placeholder="e.g. $199" />
+                <Controller
+                  name="images"
+                  control={control}
+                  render={({ field }) => (
+                    <ImageManager
+                      images={field.value}
+                      onChange={field.onChange}
+                      folder="products"
+                    />
+                  )}
+                />
               </FieldContent>
-              <FieldError errors={[errors.price]} />
+              <FieldError errors={[errors.images]} />
             </Field>
-
+  
             <Field>
-              <FieldLabel htmlFor="category">Category</FieldLabel>
+              <FieldLabel htmlFor="title">Title</FieldLabel>
               <FieldContent>
-                <Input id="category" {...register("category")} placeholder="Frames" />
+                <Input id="title" {...register("title")} placeholder="Frame Title" />
               </FieldContent>
-              <FieldError errors={[errors.category]} />
+              <FieldError errors={[errors.title]} />
             </Field>
-          </div>
+  
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-[100px_1fr] gap-4 items-end">
+                <Field>
+                  <FieldLabel>Currency</FieldLabel>
+                  <FieldContent>
+                    <Controller
+                      name="currency"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="₦" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="₦">₦ (NGN)</SelectItem>
+                            <SelectItem value="$">$ (USD)</SelectItem>
+                            <SelectItem value="£">£ (GBP)</SelectItem>
+                            <SelectItem value="€">€ (EUR)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                  </FieldContent>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="amount">Price</FieldLabel>
+                  <FieldContent>
+                    <Input id="amount" {...register("amount")} placeholder="50,000" />
+                  </FieldContent>
+                  <FieldError errors={[errors.amount]} />
+                </Field>
+              </div>
+  
+              <Field>
+                <FieldLabel htmlFor="category">Category</FieldLabel>
+                <FieldContent>
+                  <Input id="category" {...register("category")} placeholder="Frames" />
+                </FieldContent>
+                <FieldError errors={[errors.category]} />
+              </Field>
+            </div>
 
           <Field>
             <FieldLabel>Description</FieldLabel>

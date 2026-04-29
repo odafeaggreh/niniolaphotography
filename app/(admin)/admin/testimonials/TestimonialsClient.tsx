@@ -2,11 +2,10 @@
 
 import * as React from "react";
 import { Plus } from "lucide-react";
-import { Project } from "@/app/types";
+import { Testimonial } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { ProjectsTable } from "./components/ProjectsTable";
-import { ProjectSheet } from "./components/ProjectSheet";
+import { TestimonialsTable } from "./components/TestimonialsTable";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -18,6 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { TestimonialSheet } from "./components/TestimonialSheet";
 import {
   Pagination,
   PaginationContent,
@@ -28,54 +28,65 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-interface ProjectsClientProps {
-  initialProjects: Project[];
+interface TestimonialsClientProps {
+  initialTestimonials: Testimonial[];
   totalCount: number;
   currentPage: number;
   pageSize: number;
 }
 
-export function ProjectsClient({ 
-  initialProjects,
+export function TestimonialsClient({ 
+  initialTestimonials,
   totalCount,
   currentPage,
   pageSize
-}: ProjectsClientProps) {
+}: TestimonialsClientProps) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [editingProject, setEditingProject] = React.useState<Project | null>(null);
+  const [editingTestimonial, setEditingTestimonial] = React.useState<Testimonial | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [projectToDelete, setProjectToDelete] = React.useState<string | null>(null);
+  const [testimonialToDelete, setTestimonialToDelete] = React.useState<string | null>(null);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const router = useRouter();
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
     if (!open) {
-      setEditingProject(null);
+      setEditingTestimonial(null);
     }
   };
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
     try {
-      if (editingProject) {
-        const res = await fetch(`/api/admin/projects/${editingProject.id}`, {
-          method: "PATCH",
-          body: JSON.stringify(data),
+      // Truncate name for privacy: "James Bond" -> "James B."
+      const nameParts = data.name.trim().split(/\s+/);
+      const formattedData = {
+        ...data,
+        name: nameParts.length > 1 
+          ? `${nameParts[0]} ${nameParts[1].charAt(0).toUpperCase()}.` 
+          : nameParts[0]
+      };
+
+      if (editingTestimonial) {
+        const res = await fetch(`/api/admin/testimonials/${editingTestimonial.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formattedData),
         });
-        if (!res.ok) throw new Error("Failed to update project");
-        toast.success("Project updated successfully");
+        if (!res.ok) throw new Error("Failed to update testimonial");
+        toast.success("Testimonial updated successfully");
       } else {
-        const res = await fetch("/api/admin/projects", {
+        const res = await fetch("/api/admin/testimonials", {
           method: "POST",
-          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formattedData),
         });
-        if (!res.ok) throw new Error("Failed to create project");
-        toast.success("Project created successfully");
+        if (!res.ok) throw new Error("Failed to create testimonial");
+        toast.success("Testimonial created successfully");
       }
       
       setIsOpen(false);
-      setEditingProject(null);
+      setEditingTestimonial(null);
       router.refresh();
     } catch (error: any) {
       console.error(error);
@@ -85,59 +96,59 @@ export function ProjectsClient({
     }
   };
 
-  const handleEdit = (project: Project) => {
-    setEditingProject(project);
+  const handleEdit = (testimonial: Testimonial) => {
+    setEditingTestimonial(testimonial);
     setIsOpen(true);
   };
 
   const confirmDelete = (id: string) => {
-    setProjectToDelete(id);
+    setTestimonialToDelete(id);
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent dialog from closing automatically
-    if (!projectToDelete) return;
+    e.preventDefault();
+    if (!testimonialToDelete) return;
     setIsDeleting(true);
     
     try {
-      const res = await fetch(`/api/admin/projects/${projectToDelete}`, {
+      const res = await fetch(`/api/admin/testimonials/${testimonialToDelete}`, {
         method: "DELETE",
       });
-      if (!res.ok) throw new Error("Failed to delete project");
-      toast.success("Project deleted successfully");
+      if (!res.ok) throw new Error("Failed to delete testimonial");
+      toast.success("Testimonial deleted successfully");
       router.refresh();
-      setProjectToDelete(null); // Close dialog on success
+      setTestimonialToDelete(null);
     } catch (error: any) {
       console.error(error);
-      toast.error(error.message || "Failed to delete project");
+      toast.error(error.message || "Failed to delete testimonial");
     } finally {
       setIsDeleting(false);
     }
   };
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Projects</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Testimonials</h1>
           <p className="text-muted-foreground">
-            Manage your photography projects and portfolio.
+            Manage client testimonials and reviews.
           </p>
         </div>
         <Button 
           onClick={() => {
-            setEditingProject(null);
+            setEditingTestimonial(null);
             setIsOpen(true);
           }}
           className="w-full sm:w-auto"
         >
           <Plus className="mr-2 h-4 w-4" />
-          Add Project
+          Add Testimonial
         </Button>
       </div>
 
-      <ProjectsTable 
-        projects={initialProjects} 
+      <TestimonialsTable 
+        testimonials={initialTestimonials} 
         onEdit={handleEdit} 
         onDelete={confirmDelete} 
       />
@@ -173,20 +184,20 @@ export function ProjectsClient({
         </Pagination>
       )}
 
-      <ProjectSheet 
+      <TestimonialSheet 
         isOpen={isOpen}
         onOpenChange={handleOpenChange}
-        editingProject={editingProject}
+        editingTestimonial={editingTestimonial}
         onSubmit={onSubmit}
         isLoading={isLoading}
       />
 
-      <AlertDialog open={!!projectToDelete} onOpenChange={(open) => !open && !isDeleting && setProjectToDelete(null)}>
+      <AlertDialog open={!!testimonialToDelete} onOpenChange={(open) => !open && !isDeleting && setTestimonialToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the project from your database.
+              This action cannot be undone. This will permanently delete the testimonial from your database.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -196,7 +207,7 @@ export function ProjectsClient({
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? "Deleting..." : "Delete Project"}
+              {isDeleting ? "Deleting..." : "Delete Testimonial"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

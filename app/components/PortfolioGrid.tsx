@@ -53,6 +53,10 @@ export default function PortfolioGrid({
           {projects.map((project, i) => {
             const primaryImage = project.images?.find(img => img.isPrimary) || project.images?.[0];
             
+            // Automatic height calculation for masonry layout
+            const heights = ["h-[400px]", "h-[500px]", "h-[350px]", "h-[600px]", "h-[450px]"];
+            const heightClass = heights[i % heights.length];
+            
             return (
               <motion.div
                 key={project.id}
@@ -60,7 +64,7 @@ export default function PortfolioGrid({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className={`relative group overflow-hidden rounded-md break-inside-avoid ${project.height}`}
+                className={`relative group overflow-hidden rounded-md break-inside-avoid ${heightClass}`}
               >
                 <Link href={`/portfolio/${project.id}`} className="block h-full w-full">
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10" />

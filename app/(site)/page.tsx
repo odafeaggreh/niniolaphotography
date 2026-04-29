@@ -9,20 +9,22 @@ import { getProjects } from "@/lib/db/projects";
 import { getServices } from "@/lib/db/services";
 import { getTestimonials } from "@/lib/db/testimonials";
 import { getProducts } from "@/lib/db/products";
+import { getSettings } from "@/lib/db/settings";
 
 export default async function Home() {
-  const [projects, services, testimonials, products] = await Promise.all([
+  const [projects, services, testimonials, products, settings] = await Promise.all([
     getProjects(),
     getServices(),
     getTestimonials(),
     getProducts(),
+    getSettings(),
   ]);
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary selection:bg-accent-gold selection:text-black">
       
       <Hero />
-      <AboutSection />
+      <AboutSection stats={settings.stats} />
       <ServiceCards services={services} />
       <PortfolioGrid projects={projects} />
       <ShopSection products={products} />

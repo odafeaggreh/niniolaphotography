@@ -7,7 +7,7 @@ export const SHOP_CONTENT = {
     messageTemplate: "Hello Niniola, I am interested in purchasing the following piece:\n\n*Product:* {title}\n*Price:* {price}\n*Info:* {details}\n*Edition:* {edition}\n*Link:* {link}\n\nCould you confirm it's availability?"
   },
   dialog: {
-    shippingInfo: "International Shipping Included",
+    shippingInfo: "",
     seriesTitleSnippet: "Collector's Series",
     materialDetailTitle: "Material Detail",
     actionButton: "Place Inquiry",

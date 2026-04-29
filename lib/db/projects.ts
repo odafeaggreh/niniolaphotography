@@ -13,7 +13,6 @@ export async function getProjects(options?: {
     query = query.where("category", "==", options.category);
   }
 
-  query = query.orderBy("order", "asc");
 
   if (options?.offset) {
     query = query.offset(options.offset);
@@ -42,10 +41,8 @@ export async function getProjects(options?: {
       id: doc.id,
       title: data.title ?? "",
       category: data.category ?? "",
-      height: data.height ?? "h-64",
       images: images,
       description: data.description ?? "",
-      order: data.order ?? 0,
     } satisfies Project;
   });
 }
@@ -74,7 +71,10 @@ export async function getAllCategories(): Promise<string[]> {
 }
 export async function addProject(project: Omit<Project, "id">): Promise<string> {
   const db = getAdminDb();
-  const docRef = await db.collection("projects").add(project);
+  const docRef = await db.collection("projects").add({
+    ...project,
+    createdAt: new Date().toISOString(),
+  });
   return docRef.id;
 }
 
@@ -99,9 +99,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
     id: doc.id,
     title: data.title ?? "",
     category: data.category ?? "",
-    height: data.height ?? "h-64",
     images: data.images ?? [],
     description: data.description ?? "",
-    order: data.order ?? 0,
   } satisfies Project;
 }

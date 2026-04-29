@@ -44,7 +44,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 {project.title}
               </h1>
               
-              <div className="prose prose-invert prose-gold max-w-none">
+              <div className="prose prose-invert max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {project.description || ""}
                 </ReactMarkdown>
