@@ -10,7 +10,7 @@ export interface SiteSettings {
     instagram: string;
     twitter: string;
     facebook: string;
-    linkedin: string;
+    substack: string;
   };
   stats: {
     yearsOfExperience: string;
@@ -43,7 +43,7 @@ export async function getSettings(): Promise<SiteSettings> {
         instagram: "#",
         twitter: "#",
         facebook: "#",
-        linkedin: "#",
+        substack: "#",
       },
       stats: {
         yearsOfExperience: "16+",

@@ -13,7 +13,7 @@ export default async function SiteLayout({
     <div className="bg-bg-primary text-text-primary min-h-screen">
       <Navbar />
       {children}
-      <Footer socials={settings.socials} />
+      <Footer socials={settings.socials} contact={settings.contact} />
     </div>
   );
 }

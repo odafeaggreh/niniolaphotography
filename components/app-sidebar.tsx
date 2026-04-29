@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Camera, Image as ImageIcon, LayoutDashboard, Settings, MessageSquare } from "lucide-react";
+import { Camera, Image as ImageIcon, LayoutDashboard, Settings, MessageSquare, PlayCircle, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -53,6 +53,16 @@ const data = {
           title: "General Settings",
           url: "/admin/settings",
           icon: Settings,
+        },
+      ],
+    },
+    {
+      title: "Help",
+      items: [
+        {
+          title: "Video Guides",
+          url: "/admin/guides",
+          icon: PlayCircle,
         },
       ],
     },
