@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addProduct } from "@/lib/db/products";
 import { getAdminAuth } from "@/lib/firebase-admin";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,6 +23,9 @@ export async function POST(request: NextRequest) {
     }
     
     const id = await addProduct(data);
+    
+    revalidatePath("/");
+    revalidatePath("/frames");
 
     return NextResponse.json({ id, status: "success" });
   } catch (error: any) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateTestimonial, deleteTestimonial } from "@/lib/db/testimonials";
 import { getAdminAuth } from "@/lib/firebase-admin";
+import { revalidatePath } from "next/cache";
 
 export async function PUT(
   request: NextRequest,
@@ -36,6 +37,8 @@ export async function DELETE(
   try {
     const { id } = await params;
     await deleteTestimonial(id);
+
+    revalidatePath("/");
     return NextResponse.json({ status: "success" });
   } catch (error: any) {
     console.error("Delete testimonial error:", error);

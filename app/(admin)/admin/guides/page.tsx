@@ -13,7 +13,7 @@ const guides: Guide[] = [
     id: "1",
     title: "Managing Portfolio Projects",
     description: "Learn how to add, edit, and organize your photography projects in the portfolio section.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder
+    videoUrl: "https://www.youtube.com/embed/Wh0bH-naE8E?si=gjiQdCg-j4bCTyGA", // Placeholder
   },
   {
     id: "2",

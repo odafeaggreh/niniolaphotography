@@ -16,7 +16,7 @@ export default async function Home() {
     getProjects(),
     getServices(),
     getTestimonials(),
-    getProducts(),
+    getProducts({ limit: 8 }),
     getSettings(),
   ]);
 

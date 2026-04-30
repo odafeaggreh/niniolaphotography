@@ -4,8 +4,9 @@ import { cn } from "@/lib/utils";
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { ShoppingBag, XIcon } from "lucide-react";
+import { ShoppingBag, XIcon, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Reveal } from "./ui/Animations";
 import { SHOP_CONTENT } from "@/app/constants/shop";
 import { Product } from "@/app/types";
@@ -19,11 +20,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface Props {
+export interface ShopSectionProps {
   products: Product[];
+  showHeader?: boolean;
+  showViewAll?: boolean;
 }
 
-function ShopSectionContent({ products }: Props) {
+export function ShopSectionContent({ products, showHeader = true, showViewAll = true }: ShopSectionProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
   const searchParams = useSearchParams();
@@ -86,19 +89,21 @@ function ShopSectionContent({ products }: Props) {
   return (
     <>
       <div className="max-w-300 mx-auto">
-        <Reveal>
-          <div className="text-center mb-16">
-            <p className="text-accent-gold uppercase tracking-[0.2em] text-sm mb-2">
-              {SHOP_CONTENT.badge}
-            </p>
-            <h2 className="text-3xl md:text-5xl text-white font-serif mb-4">
-              {SHOP_CONTENT.title}
-            </h2>
-            <p className="text-text-secondary max-w-xl mx-auto">
-              {SHOP_CONTENT.description}
-            </p>
-          </div>
-        </Reveal>
+        {showHeader && (
+          <Reveal>
+            <div className="text-center mb-16">
+              <p className="text-accent-gold uppercase tracking-[0.2em] text-sm mb-2">
+                {SHOP_CONTENT.badge}
+              </p>
+              <h2 className="text-3xl md:text-5xl text-white font-serif mb-4">
+                {SHOP_CONTENT.title}
+              </h2>
+              <p className="text-text-secondary max-w-xl mx-auto">
+                {SHOP_CONTENT.description}
+              </p>
+            </div>
+          </Reveal>
+        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product, i) => (
@@ -135,6 +140,14 @@ function ShopSectionContent({ products }: Props) {
             </motion.div>
           ))}
         </div>
+
+        {showViewAll && (
+          <div className="mt-12 flex justify-center">
+            <Link href="/frames" className="flex items-center gap-2 text-white hover:text-accent-gold transition-colors pb-1 border-b border-white hover:border-accent-gold">
+              View All Frames <ArrowUpRight size={18} />
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Product Information Dialog */}
@@ -291,7 +304,7 @@ function ShopSectionContent({ products }: Props) {
   );
 }
 
-export default function ShopSection({ products }: Props) {
+export default function ShopSection({ products }: ShopSectionProps) {
   return (
     <section id="shop" className="py-30 bg-bg-secondary px-6">
       <Suspense

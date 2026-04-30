@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addTestimonial } from "@/lib/db/testimonials";
 import { getAdminAuth } from "@/lib/firebase-admin";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,6 +18,8 @@ export async function POST(request: NextRequest) {
 
     const data = await request.json();
     const id = await addTestimonial(data);
+    
+    revalidatePath("/");
 
     return NextResponse.json({ id, status: "success" });
   } catch (error: any) {

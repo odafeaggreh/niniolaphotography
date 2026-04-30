@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateProject, deleteProject } from "@/lib/db/projects";
 import { getAdminAuth } from "@/lib/firebase-admin";
+import { revalidatePath } from "next/cache";
 
 export async function PATCH(
   request: NextRequest,
@@ -21,6 +22,9 @@ export async function PATCH(
     const data = await request.json();
     const { id } = await params;
     await updateProject(id, data);
+    
+    revalidatePath("/");
+    revalidatePath("/portfolio");
 
     return NextResponse.json({ status: "success" });
   } catch (error: any) {
@@ -47,6 +51,9 @@ export async function DELETE(
 
     const { id } = await params;
     await deleteProject(id);
+
+    revalidatePath("/");
+    revalidatePath("/portfolio");
 
     return NextResponse.json({ status: "success" });
   } catch (error: any) {

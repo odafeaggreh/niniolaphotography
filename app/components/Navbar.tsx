@@ -8,8 +8,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { name: "Home", path: "/" },
-  { name: "About Me", path: "#about" },
+  { name: "About Me", path: "/#about" },
   { name: "Portfolio", path: "/portfolio" },
+  { name: "Frames", path: "/frames" },
   { name: "Get in touch", path: "/contact" },
 ];
 

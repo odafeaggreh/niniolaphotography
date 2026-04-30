@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateProduct, deleteProduct } from "@/lib/db/products";
 import { getAdminAuth } from "@/lib/firebase-admin";
+import { revalidatePath } from "next/cache";
 
 export async function PATCH(
   request: NextRequest,
@@ -21,6 +22,9 @@ export async function PATCH(
     const data = await request.json();
     const { id } = await params;
     await updateProduct(id, data);
+    
+    revalidatePath("/");
+    revalidatePath("/frames");
 
     return NextResponse.json({ status: "success" });
   } catch (error: any) {
@@ -47,6 +51,9 @@ export async function DELETE(
 
     const { id } = await params;
     await deleteProduct(id);
+
+    revalidatePath("/");
+    revalidatePath("/frames");
 
     return NextResponse.json({ status: "success" });
   } catch (error: any) {

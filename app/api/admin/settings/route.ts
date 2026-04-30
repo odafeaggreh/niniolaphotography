@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSettings, updateSettings } from "@/lib/db/settings";
 import { getAdminAuth } from "@/lib/firebase-admin";
+import { revalidatePath } from "next/cache";
 
 async function verifyAdmin(request: NextRequest) {
   const sessionCookie = request.cookies.get("__session")?.value;
@@ -38,6 +39,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     await updateSettings(body);
+    revalidatePath("/");
+    revalidatePath("/frames");
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to update settings" }, { status: 500 });
