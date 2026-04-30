@@ -13,25 +13,26 @@ const guides: Guide[] = [
     id: "1",
     title: "Managing Portfolio Projects",
     description: "Learn how to add, edit, and organize your photography projects in the portfolio section.",
-    videoUrl: "https://www.youtube.com/embed/Wh0bH-naE8E?si=gjiQdCg-j4bCTyGA", // Placeholder
+    videoUrl: "https://www.youtube.com/embed/Wh0bH-naE8E?si=gjiQdCg-j4bCTyGA", 
   },
+  
   {
     id: "2",
-    title: "Updating Site Settings",
-    description: "A quick walkthrough on how to update your contact information, social media links, and stats.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder
+    title: "Configuring Frame Prices",
+    description: "How to set up different frames and currencies for your shop items.",
+    videoUrl: "https://www.youtube.com/embed/Uz0R4uS5EUI?si=_zdK2UUbloWFp7in",
   },
   {
     id: "3",
-    title: "Configuring Frame Prices",
-    description: "How to set up different frames and currencies for your shop items.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder
+    title: "Updating Site Settings",
+    description: "A quick walkthrough on how to update your contact information, social media links, and stats.",
+    videoUrl: "https://www.youtube.com/embed/MV7HrhIasMs?si=zQM97PRZ0Xz_S_0j",
   },
   {
     id: "4",
     title: "Managing Testimonials",
     description: "Learn how to curate and display client feedback on your website.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder
+    videoUrl: "https://www.youtube.com/embed/iasOWrwpAzs?si=E1r-pLkVLT3CibVB",
   },
 ];
 
