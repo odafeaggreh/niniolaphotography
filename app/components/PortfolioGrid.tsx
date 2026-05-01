@@ -21,6 +21,10 @@ export default function PortfolioGrid({
   showHeader = true,
   showViewAll = true
 }: Props) {
+  if (projects.length === 0) {
+    return null;
+  }
+
   return (
     <section id="works" className="py-20 bg-bg-primary px-6">
       <div className="max-w-300 mx-auto">

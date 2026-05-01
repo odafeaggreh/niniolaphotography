@@ -33,27 +33,35 @@ export default async function Home() {
     getProducts({ limit: 8 }),
     getSettings(),
   ]);
+  const hasServices = services.length > 0;
+  const hasProjects = projects.length > 0;
+  const hasProducts = products.length > 0;
+  const hasTestimonials = testimonials.length > 0;
   const pageSchema = [
     buildBreadcrumbSchema([{ name: "Home", url: absoluteUrl("/") }]),
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      name: "Photography Services",
-      serviceType: [
-        "Portrait Photography",
-        "Editorial Photography",
-        "Event Photography",
-        "Fine Art Photography",
-      ],
-      provider: {
-        "@type": "Person",
-        name: seoConfig.creatorName,
-      },
-      areaServed: seoConfig.serviceAreas,
-      url: absoluteUrl("/"),
-      description:
-        "Storytelling photography services based in Benin City, Nigeria and available for commissions locally, nationwide, and internationally.",
-    },
+    ...(hasServices
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: "Photography Services",
+            serviceType: [
+              "Portrait Photography",
+              "Editorial Photography",
+              "Event Photography",
+              "Fine Art Photography",
+            ],
+            provider: {
+              "@type": "Person",
+              name: seoConfig.creatorName,
+            },
+            areaServed: seoConfig.serviceAreas,
+            url: absoluteUrl("/"),
+            description:
+              "Storytelling photography services based in Benin City, Nigeria and available for commissions locally, nationwide, and internationally.",
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -67,10 +75,10 @@ export default async function Home() {
       ))}
       <Hero />
       <AboutSection stats={settings.stats} />
-      <ServiceCards services={services} />
-      <PortfolioGrid projects={projects} />
-      <ShopSection products={products} />
-      <Testimonials testimonials={testimonials} />
+      {hasServices ? <ServiceCards services={services} /> : null}
+      {hasProjects ? <PortfolioGrid projects={projects} /> : null}
+      {hasProducts ? <ShopSection products={products} /> : null}
+      {hasTestimonials ? <Testimonials testimonials={testimonials} /> : null}
       <BookingSection />
     </main>
   );

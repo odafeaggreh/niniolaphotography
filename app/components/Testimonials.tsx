@@ -6,6 +6,10 @@ interface Props {
 }
 
 export default function Testimonials({ testimonials }: Props) {
+  if (testimonials.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-30 bg-bg-primary px-6 overflow-hidden">
       <div className="max-w-300 mx-auto">

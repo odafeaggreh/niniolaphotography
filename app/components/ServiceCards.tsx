@@ -18,6 +18,10 @@ interface Props {
 }
 
 export default function ServiceCards({ services }: Props) {
+  if (services.length === 0) {
+    return null;
+  }
+
   return (
     <section id="services" className="py-[120px] bg-bg-primary px-6">
       <div className="max-w-[1200px] mx-auto">

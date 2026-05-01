@@ -305,6 +305,10 @@ export function ShopSectionContent({ products, showHeader = true, showViewAll = 
 }
 
 export default function ShopSection({ products }: ShopSectionProps) {
+  if (products.length === 0) {
+    return null;
+  }
+
   return (
     <section id="shop" className="py-30 bg-bg-secondary px-6">
       <Suspense
