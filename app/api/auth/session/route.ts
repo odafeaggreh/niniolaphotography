@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getAdminAuth } from "@/lib/firebase-admin";
+import { enforceRateLimit } from "@/lib/security/rate-limit";
 
 export async function POST(request: NextRequest) {
+  const rateLimitResponse = enforceRateLimit(request, {
+    key: "auth-session",
+    limit: 10,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   try {
     const { idToken } = await request.json();
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSettings, updateSettings } from "@/lib/db/settings";
 import { getAdminAuth } from "@/lib/firebase-admin";
 import { revalidatePath } from "next/cache";
+import { enforceRateLimit } from "@/lib/security/rate-limit";
 
 async function verifyAdmin(request: NextRequest) {
   const sessionCookie = request.cookies.get("__session")?.value;
@@ -31,6 +32,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const rateLimitResponse = enforceRateLimit(request, {
+    key: "admin-settings-update",
+    limit: 20,
+    windowMs: 60 * 1000,
+  });
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   const admin = await verifyAdmin(request);
   if (!admin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

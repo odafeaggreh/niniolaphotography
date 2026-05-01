@@ -1,19 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminAuth, getAdminDb } from "@/lib/firebase-admin";
 import { Timestamp } from "firebase-admin/firestore";
+import { enforceRateLimit } from "@/lib/security/rate-limit";
+
+async function verifyAdmin(request: NextRequest) {
+  const sessionCookie = request.cookies.get("__session")?.value;
+  if (!sessionCookie) return null;
+
+  try {
+    const auth = getAdminAuth();
+    const decodedToken = await auth.verifySessionCookie(sessionCookie, true);
+    return decodedToken.admin ? decodedToken : null;
+  } catch {
+    return null;
+  }
+}
 
 export async function POST(request: NextRequest) {
+  const rateLimitResponse = enforceRateLimit(request, {
+    key: "admin-set-claim",
+    limit: 5,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
+  const admin = await verifyAdmin(request);
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const { uid, email, setupKey } = await request.json();
-    if (!uid || !setupKey || !email) {
-      return NextResponse.json({ error: "UID, email and setupKey are required" }, { status: 400 });
-    }
-
-    
-
-    // Security check: require a secret setup key from environment variables
-    if (setupKey !== process.env.ADMIN_SETUP_KEY) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { uid, email } = await request.json();
+    if (!uid || !email) {
+      return NextResponse.json({ error: "UID and email are required" }, { status: 400 });
     }
 
     const auth = getAdminAuth();

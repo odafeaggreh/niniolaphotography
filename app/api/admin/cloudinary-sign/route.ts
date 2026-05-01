@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/firebase-admin";
+import { enforceRateLimit } from "@/lib/security/rate-limit";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -8,9 +9,18 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const sessionCookie = (request as any).cookies?.get("__session")?.value;
+    const rateLimitResponse = enforceRateLimit(request, {
+      key: "admin-cloudinary-sign",
+      limit: 30,
+      windowMs: 60 * 1000,
+    });
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    const sessionCookie = request.cookies.get("__session")?.value;
     if (!sessionCookie) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -40,6 +50,6 @@ export async function POST(request: Request) {
     });
   } catch (error: any) {
     console.error("Cloudinary sign error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
