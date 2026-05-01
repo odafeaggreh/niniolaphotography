@@ -16,7 +16,7 @@ interface Props {
 
 export default function PortfolioGrid({ 
   projects, 
-  title = "Our Featured Portfolio Projects",
+  title = "Conceptual & Fine Art Photography Portfolio",
   subtitle = "Portfolio",
   showHeader = true,
   showViewAll = true
@@ -41,7 +41,7 @@ export default function PortfolioGrid({
                   whileTap={{ scale: 0.95 }}
                   className="hidden md:flex items-center gap-2 text-white hover:text-accent-gold transition-colors pb-2 border-b border-transparent hover:border-accent-gold"
                 >
-                  View All Works <ArrowUpRight size={18} />
+                  View Full Portfolio <ArrowUpRight size={18} />
                 </motion.a>
               )}
             </div>
@@ -92,7 +92,7 @@ export default function PortfolioGrid({
         {showHeader && showViewAll && (
           <div className="mt-12 flex justify-center md:hidden">
             <Link href="/portfolio" className="flex items-center gap-2 text-white hover:text-accent-gold transition-colors pb-1 border-b border-white hover:border-accent-gold">
-              View All Works <ArrowUpRight size={18} />
+              View Full Portfolio <ArrowUpRight size={18} />
             </Link>
           </div>
         )}

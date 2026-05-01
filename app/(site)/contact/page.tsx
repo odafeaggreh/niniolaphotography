@@ -1,6 +1,7 @@
 import { getSettings } from "@/lib/db/settings";
 import ContactForm from "@/app/components/ContactForm";
 import { Mail, Phone, MapPin, Instagram, Twitter, Facebook } from "lucide-react";
+import { absoluteUrl, buildBreadcrumbSchema, buildMetadata } from "@/lib/seo";
 
 const SubstackIcon = ({ size = 24 }: { size?: number }) => (
   <svg 
@@ -13,17 +14,45 @@ const SubstackIcon = ({ size = 24 }: { size?: number }) => (
   </svg>
 );
 
-export const metadata = {
-  title: "Contact | Niniola Photography",
-  description: "Get in touch with Niniola Photography for bookings and inquiries.",
-};
+export const metadata = buildMetadata({
+  title: "Contact a Photographer in Benin City, Nigeria",
+  description:
+    "Contact Niniola Photography for portrait sessions, editorial shoots, events, collaborations, and fine art commissions in Benin City, across Nigeria, and internationally.",
+  path: "/contact",
+  keywords: [
+    "contact photographer Benin City",
+    "book photographer in Nigeria",
+    "hire photographer Edo State",
+  ],
+});
 
 export default async function ContactPage() {
   const settings = await getSettings();
   const { contact, socials } = settings;
+  const pageSchema = [
+    buildBreadcrumbSchema([
+      { name: "Home", url: absoluteUrl("/") },
+      { name: "Contact", url: absoluteUrl("/contact") },
+    ]),
+    {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      name: "Contact Niniola Photography",
+      url: absoluteUrl("/contact"),
+      description:
+        "Booking and inquiry page for Niniola Photography in Benin City, Nigeria.",
+    },
+  ];
 
   return (
     <main className="pt-32 pb-24 px-6 bg-bg-primary min-h-screen">
+      {pageSchema.map((schema, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       <div className="max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24">
           {/* Left Side: Contact Info */}
@@ -36,7 +65,7 @@ export default async function ContactPage() {
                 Let's Create Something Beautiful
               </h1>
               <p className="text-text-secondary max-w-md">
-                Ready to book a session? Fill out the form and I'll get back to you within 24 hours. I can't wait to hear from you!
+                Ready to book a session in Benin City, elsewhere in Nigeria, or for an international collaboration? Fill out the form and I&apos;ll get back to you within 24 hours.
               </p>
             </div>
 
@@ -73,6 +102,9 @@ export default async function ContactPage() {
                   <p className="text-white font-medium mb-1">Office</p>
                   <p className="text-text-secondary">
                     {contact.address}
+                  </p>
+                  <p className="text-text-muted text-sm mt-2">
+                    Based in Benin City, available for commissions across Nigeria and worldwide.
                   </p>
                 </div>
               </div>

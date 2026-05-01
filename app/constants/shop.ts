@@ -1,9 +1,9 @@
 export const SHOP_CONTENT = {
-  badge: "Shop",
-  title: "Framed Prints & Art",
-  description: "Bring the beauty of the world into your home with our premium framed prints.",
+  badge: "Frames & Prints",
+  title: "Limited Edition Photography Prints",
+  description: "Own a piece of fine art photography. Each print is produced on high-grade paper and ready to ship worldwide as framed wall art.",
   contact: {
-    whatsapp: "+2348123951878", // Update with actual number
+    whatsapp: "+2348123951878",
     messageTemplate: "Hello Niniola, I am interested in purchasing the following piece:\n\n*Product:* {title}\n*Price:* {price}\n*Info:* {details}\n*Edition:* {edition}\n*Link:* {link}\n\nCould you confirm it's availability?"
   },
   dialog: {

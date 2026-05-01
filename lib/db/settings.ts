@@ -37,7 +37,7 @@ export async function getSettings(): Promise<SiteSettings> {
       contact: {
         email: "hello@niniola.com",
         phone: "+234 800 000 0000",
-        address: "Lagos, Nigeria",
+        address: "Benin City, Edo State, Nigeria",
       },
       socials: {
         instagram: "#",

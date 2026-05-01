@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { getProjectById } from "@/lib/db/projects";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -5,9 +7,41 @@ import remarkGfm from "remark-gfm";
 import { Reveal } from "@/app/components/ui/Animations";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { absoluteUrl, buildBreadcrumbSchema, buildMetadata } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const project = await getProjectById(id);
+
+  if (!project) {
+    return buildMetadata({
+      title: "Portfolio Project Not Found",
+      path: `/portfolio/${id}`,
+      noIndex: true,
+    });
+  }
+
+  const primaryImage = project.images.find((img) => img.isPrimary) || project.images[0];
+  const description =
+    project.description?.slice(0, 150) ||
+    `${project.title} is a ${project.category.toLowerCase()} photography project by Niniola Photography in Benin City, Nigeria.`;
+
+  return buildMetadata({
+    title: project.title,
+    description,
+    path: `/portfolio/${project.id}`,
+    images: primaryImage ? [primaryImage.url] : undefined,
+    keywords: [
+      `${project.title} photography project`,
+      `${project.category.toLowerCase()} photographer Nigeria`,
+      "Benin City photography portfolio",
+    ],
+    type: "article",
+  });
 }
 
 export default async function ProjectDetailPage({ params }: Props) {
@@ -20,9 +54,36 @@ export default async function ProjectDetailPage({ params }: Props) {
 
   const primaryImage = project.images.find((img) => img.isPrimary) || project.images[0];
   const galleryImages = project.images;
+  const pageSchema = [
+    buildBreadcrumbSchema([
+      { name: "Home", url: absoluteUrl("/") },
+      { name: "Portfolio", url: absoluteUrl("/portfolio") },
+      { name: project.title, url: absoluteUrl(`/portfolio/${project.id}`) },
+    ]),
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      name: project.title,
+      url: absoluteUrl(`/portfolio/${project.id}`),
+      image: galleryImages.map((image) => image.url),
+      description: project.description || project.title,
+      creator: {
+        "@type": "Person",
+        name: "Niniola Blessing Samuel",
+      },
+      genre: project.category,
+    },
+  ];
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary pt-32 pb-20">
+      {pageSchema.map((schema, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       <div className="max-w-1200 mx-auto px-6">
         <Reveal>
           <Link 
@@ -56,7 +117,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             <div className="rounded-lg overflow-hidden border border-white/5">
               <img
                 src={primaryImage?.url || "/placeholder-image.jpg"}
-                alt={project.title}
+                alt={`${project.title} by Niniola Photography`}
                 className="w-full h-auto object-cover"
               />
             </div>
@@ -75,7 +136,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                   <div key={img.cloudinaryPublicId} className="rounded-lg overflow-hidden border border-white/5 bg-bg-secondary">
                     <img
                       src={img.url}
-                      alt={`Gallery image ${i + 1}`}
+                      alt={`${project.title} ${project.category} photograph ${i + 1}`}
                       className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
                     />
                   </div>

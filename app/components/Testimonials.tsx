@@ -11,10 +11,10 @@ export default function Testimonials({ testimonials }: Props) {
       <div className="max-w-300 mx-auto">
         <div className="mb-16">
           <p className="text-accent-gold uppercase tracking-[0.2em] text-sm mb-2">
-            Testimonials
+            Client Stories
           </p>
           <h2 className="text-3xl md:text-5xl text-white font-serif">
-            What Our Clients Say
+            Trusted by Clients <br /> Across the Globe
           </h2>
         </div>
 

@@ -1,24 +1,12 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Niniola Photography",
-  description: "Capturing moments, crafting stories.",
-};
+import { buildMetadata } from "@/lib/seo";
+import { inter, playfair } from "@/lib/fonts";
 
 import NextTopLoader from "nextjs-toploader";
+
+export const metadata: Metadata = buildMetadata();
 
 export default function RootLayout({
   children,

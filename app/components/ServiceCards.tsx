@@ -27,10 +27,10 @@ export default function ServiceCards({ services }: Props) {
               Services
             </p>
             <h2 className="text-3xl md:text-5xl text-white font-serif mb-4">
-              Take A Look At Our Offers <br /> To Suit Your Needs
+              Street Photography, Conceptual <br /> Projects & Portrait Sessions
             </h2>
             <p className="text-text-secondary max-w-2xl">
-              We provide a wide range of photography services tailored to your specific requirements.
+              From raw street moments, concept-driven photo series to intimate portrait sessions, every frame is built around a story worth telling.
             </p>
           </div>
         </Reveal>

@@ -1,13 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { Camera, Image as ImageIcon, LayoutDashboard, Settings, MessageSquare, PlayCircle, HelpCircle } from "lucide-react";
+import { Camera, Image as ImageIcon, LayoutDashboard, LogOut, MessageSquare, PlayCircle, Settings } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { getAuth, signOut } from "firebase/auth";
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -18,6 +20,7 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { getClientApp } from "@/lib/firebase-client";
 
 const data = {
   navMain: [
@@ -71,11 +74,32 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const router = useRouter();
   const { setOpenMobile } = useSidebar();
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 
   React.useEffect(() => {
     setOpenMobile(false);
   }, [pathname, setOpenMobile]);
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+
+      await fetch("/api/auth/session", {
+        method: "DELETE",
+      });
+
+      const auth = getAuth(getClientApp());
+      await signOut(auth);
+
+      router.push("/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed", error);
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <Sidebar {...props}>
@@ -127,6 +151,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
       </SidebarContent>
+      <SidebarFooter className="border-t p-4">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="justify-center gap-2 bg-accent-gold text-black hover:bg-accent-hover hover:text-black disabled:opacity-60 cursor-pointer"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
